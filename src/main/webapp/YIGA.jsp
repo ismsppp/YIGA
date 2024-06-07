@@ -554,9 +554,12 @@
 	                    </div>
 	                </div>
 	                <div class="right-panel">
-	                    <div class="check-button">
-	                        <button class="cb">Check</button>
-	                    </div>
+			        	<form method="post" action="YIGA" enctype="multipart/form-data">
+		                    <div class="check-button">
+								<input type="file" class="form-control" id="filename" name="filename">
+		                        <button type="submit" class="cb">Check</button>
+		                    </div>
+		                </form>
 	                    <div class="live-upt2us">
 	                        <table>
 	                            <thead>

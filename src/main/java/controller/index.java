@@ -31,46 +31,6 @@ public class index extends HttpServlet {
         response.setContentType("text/html; charset=utf-8");
 		System.out.println("post");
 
-		/*
-        Part part = request.getPart("fileupload1");
-        System.out.println("part : "+part);
-        String realpath = "";
-        realpath = part.getSubmittedFileName();
-        System.out.println("realpath : "+realpath);
-		if(realpath==null || realpath.equals("")) {
-			PrintWriter out = response.getWriter();
-			out.print("<script>");
-			out.print("alert('검사할 파일을 첨부해야 합니다.');");
-			out.print("location.href = 'index'");
-			out.print("</script>");	
-			return;
-		}
-		String targetURL = "http://localhost:5000/server";
-        String jsonInputString = "{\"key1\": \"value1\", \"key2\": \"value2\"}";
-
-        URL url = new URL(targetURL);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json; utf-8");
-        con.setRequestProperty("Accept", "application/json");
-        con.setDoOutput(true);
-
-        try (OutputStream os = con.getOutputStream()) {
-            byte[] input = jsonInputString.getBytes("utf-8");
-            os.write(input, 0, input.length);
-        }
-
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(con.getInputStream(), "utf-8"))) {
-            StringBuilder responseStr = new StringBuilder();
-            String responseLine = null;
-            while ((responseLine = br.readLine()) != null) {
-                responseStr.append(responseLine.trim());
-            }
-            response.getWriter().write(responseStr.toString());
-            request.setAttribute("content", responseStr.toString());
-        }
-*/
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
 		dispatcher.forward(request, response);
 	}
