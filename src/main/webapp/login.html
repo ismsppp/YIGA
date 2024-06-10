@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YIGA</title>
+    <link rel="shortcut icon" href="icon/fa2.ico" type="image/x-icon"> <!--이거 잘 나오는지 확인 필수-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Saira+Stencil+One&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@100..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="css/login_style.css" rel="stylesheet">
+</head>
+
+<body>
+    <video autoplay muted loop id="bgVideo">
+        <source src="video/b.mp4" type="video/mp4">
+    </video>
+
+    <!--이전 페이지로 이동 (index.html)-->
+    <a href="./index.html">
+        <div class="index-page">
+            <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+        </div>
+    </a>
+    <!--이전 페이지 여기까지-->
+
+    <div class="box">
+        <div class="form-box sign-in"> 
+            <form action="login_ok.jsp" method="post">  <!--로그인-->
+                <h2>Sign <span class="IN">In</span></h2>
+                <div class="input-group">
+                    <input type="text" required>
+                    <label for="">Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" required>
+                    <label for="">Password</label>
+                </div>
+
+                <button type="submit">Sign In</button>
+                <div class="signUp-link">
+                    <p>Don't have an account? <a href="#" class="signUpBtn-link">Sign up</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-box sign-up">
+            <form action="join_ok.jsp"> <!--회원가입-->
+                <h2>Sign <span class="UP">Up</span></h2>
+                <div class="input-group">
+                    <input type="text" required>
+                    <label for="">Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" required>
+                    <label for="">Create Password</label>
+                </div>
+
+                <button type="submit">Sign Up</button>
+                <div class="signUp-link">
+                    <p>Already have an account? <a href="#" class="signInBtn-link">Sign In</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        const signUpBtnLink = document.querySelector('.signUpBtn-link');
+        const signInBtnLink = document.querySelector('.signInBtn-link');
+        const box = document.querySelector('.box');
+
+        signUpBtnLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            box.classList.add('active');
+        });
+
+        signInBtnLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            box.classList.remove('active');
+        });
+    </script>
+</body>
+
+</html>
