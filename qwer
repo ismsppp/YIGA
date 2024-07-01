@@ -1,0 +1,578 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.List"%>
+<%@ page import="ismsdto.resultdto"%>
+<%@ page import="java.util.Date" %>
+<!DOCTYPE html>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1a1f36;
+            color: #fff;
+            overflow-y: auto;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .main {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header .search {
+            display: flex;
+            align-items: center;
+            background-color: #2a2e45;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+        .header .search i {
+            color: #9fa1b4;
+            cursor: pointer;
+        }
+        .content {
+            display: flex;
+            flex: 1;
+        }
+        .left-panel {
+            flex: 1;
+            padding-right: 20px;
+        }
+        .right-panel {
+            flex: 2;
+            background-color: #1a1f36;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .UPT {
+            height: 90%;
+            overflow-y: auto;
+        }
+        .UPT,
+        .check-button,
+        .live-upt2us,
+        .earnings-summary {
+            background-color: #2a2e45;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .UPT .upt2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .UPT .upt2:last-child {
+            margin-bottom: 0;
+        }
+        .UPT .upt2 div {
+            text-align: right;
+        }
+        .UPT .upt2 div span {
+            display: block;
+        }
+        .check-button,
+        .live-upt2us {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .check-button .file-name {
+        margin-right: auto;
+        font-size: 14px;
+        }
+        .check-button button {
+            background-color: #4e5cdb;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .live-upt2us table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .live-upt2us table th,
+        .live-upt2us table td {
+            padding: 10px;
+            text-align: left;
+        }
+        .live-upt2us table th {
+            background-color: #3a3e52;
+        }
+        .live-upt2us table td {
+            background-color: #2a2e45;
+        }
+        .live-upt2us table td .details {
+            background-color: #4e5cdb;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .earnings-summary canvas {
+            width: 100%;
+            height: 300px;
+        }
+        nav {
+            overflow: hidden;
+            position: relative;
+            width: calc(250px + 20px);
+            z-index: 2;
+        }
+        .menu-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 20px;
+            color: #fff;
+        }
+        .menu-btn .line {
+            width: 100%;
+            height: 2px;
+            background-color: #fff;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        .menu-btn.open .line--1 {
+            transform: translateY(9px) rotate(-45deg);
+        }
+        .menu-btn.open .line--2 {
+            opacity: 0;
+        }
+        .menu-btn.open .line--3 {
+            transform: translateY(-9px) rotate(45deg);
+        }
+        .nav-links {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: calc(250px + 20px);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #111528;
+            padding: 20px;
+            transition: transform 0.5s ease;
+            overflow-y: auto;
+        }
+        .nav-links a {
+            color: #9fa1b4;
+            text-decoration: none;
+            margin: 10px 0;
+            display: block;
+            font-size: 16px;
+        }
+        .nav-links a:hover {
+            color: #fff;
+        }
+        .nav-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .nav-links ul li {
+            margin: 5px 0;
+            cursor: pointer;
+            padding: 5px 10px;
+            background-color: #2a2e45;
+            border-radius: 5px;
+        }
+        ul {
+            padding: 0;
+        }
+        li {
+            list-style: none;
+            line-height: 34px;
+        }
+        a {
+            display: block;
+            text-decoration: none;
+            color: #616161;
+            text-align: center;
+        }
+        .snd_menu {
+            background: #ffffff;
+        }
+        .trd_menu {
+            background: #ddd;
+        }
+        .sub_menu {
+            display: none;
+        }
+        /* 서브메뉴들 숨김 */
+        .selec {
+            background: #4e5cdb;
+            color: #ffffff;
+        }
+        .snd_menu {
+            background: #ffffff;
+        }
+        .trd_menu {
+            background: #ddd;
+        }
+        .sub_menu {
+            display: none;
+        }
+        .selec {
+            background: #4e5cdb;
+            color: #ffffff;
+        }
+        /* 이전 페이지 이동 아이콘 흰색으로 바꾸기(아니 이거 왜 안 돼...) */
+        .index-page {
+            color: #fff;
+            text-decoration: none;
+        }
+        .index-page:hover {
+            color: #fff;
+        }
+
+
+        .file-upload-label {
+            background-color: #4e5cdb;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .file-name {
+            margin-left: 10px;
+        }
+
+        /*여기까지 아이콘 흰색*/
+        /* 여기서부터 highchart */
+        .highcharts-figure,
+        .highcharts-data-table table {
+            min-width: 310px;
+            max-width: 800px;
+            margin: 1em auto;
+        }
+        #container2 {
+            height: 400px;
+            background: #fff;
+        }
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #ebebeb;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+        .highcharts-data-table td,
+        .highcharts-data-table th,
+        .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+        .highcharts-data-table thead tr,
+        .highcharts-data-table tr:nth-child(even) {
+            background: #fff;
+        }
+        .highcharts-data-table tr:hover {
+            background: #fff;
+        }
+    </style>
+<html>
+	<head>
+		<meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <link rel="shortcut icon" href="icon/fa2.ico" type="image/x-icon">
+	    <title>ISMS-P 인증 분석 자동화 UPT</title>
+	    <script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<script src="https://code.highcharts.com/modules/export-data.js"></script>
+		<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	</head>
+	<body>
+	    <div class="container">
+	        <!-- Side Navbar -->
+	        <nav>
+	            <div class="menu-btn">
+	                <div class="line line--1"></div>
+	                <div class="line line--2"></div>
+	                <div class="line line--3"></div>
+	            </div>
+	            <div class="nav-links"> <!--와.. 이거 진짜 빡세다... 너무 힘들어... 제발.. 이거 고칠 때는 미리 말해주세요.-->
+	                <nav>
+	                    <ul id="main_menu">
+	                        <%
+	                        String categoryResult = (String)request.getAttribute("categoryResult");
+	                        %>
+	                        <%=categoryResult %>
+	                    </ul>
+	                </nav>
+	            </div>
+	        </nav>
+	
+	        <!-- Main Content -->
+	        <div class="main">
+	            <div class="header">
+	                <div class="user-info">
+	                    <h2>ISMS-P 인증</h2>
+	                    <%
+	                    Date now = new Date();
+	                    %>
+	                    <p><%=now %></p>
+	                </div>
+	
+	                <!--이전 페이지로 이동 (index.html)-->
+	                <a href="./index.jsp">
+	                    <div class="index-page">
+	                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+	                    </div>
+	                </a>
+	            </div>
+	
+	            <div class="content">
+	                <div class="left-panel">
+	                    <div class="UPT">
+	                        <div class="upt2">
+	                        <%
+	                        String category = (String)request.getAttribute("category");
+	                        %>
+	                            <div>
+	                              	<%=category %>
+	                            </div>
+	                            <div>
+	                            </div>
+	                        </div>
+	                        <div class="upt2">
+	                            <%
+	                            //String gptresponse = (String)request.getAttribute("gptresponse");
+	                            resultdto result = (resultdto)request.getAttribute("result");
+	                            
+	                            //if(gptresponse==null || gptresponse.equals("")){
+	                            %>
+	                            <div>
+	                            </div>
+	                            <%
+	                            //} else {
+	                            %>
+	                            <div>
+	                            </div>
+	                            <%
+	                            //}
+	                            if(result == null || result.getDescription()==null){
+		                            %>
+		                            <div>
+		                            </div>
+		                            <%
+		                            } else {
+		                            %>
+		                            <div>
+		                            <%=result.getDescription() %>
+		                            </div>
+		                            <%
+		                            }
+	                            %>
+	                        </div>
+	                        <div class="upt2">
+	                            <div>
+	                            </div>
+	                            <div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="right-panel">
+			        	<form method="post" action="YIGA" enctype="multipart/form-data" data-category=${category}>
+		                    <div class="check-button">
+								<input type="file" class="form-control" id="filename" name="filename" style="display:none;">
+                                <label for="filename" class="file-upload-label">파일 선택</label>
+                                <span class="file-name" id="file-name">선택된 파일 없음</span>
+
+								<input type="file" class="form-control" id="filename" name="filename" style="display:none;">
+                                <label for="filename" class="file-upload-label">파일 선택</label>
+                                <span class="file-name" id="file-name">선택된 파일 없음</span>
+                                <button type="submit" class="cb">Check</button>
+		                    </div>
+		                </form>
+	                    <div class="live-upt2us">
+	                        <table>
+	                            <thead>
+	                                <tr>
+	                                    <th>No.</th>
+	                                    <th>파일명</th>
+	                                    <th>ISMS-P 준수 여부</th>
+	                                    <th>상세내용 보기</th>
+	                                </tr>
+	                            </thead>
+	                            <tbody>
+	                                <%
+		                            if(result!=null && result.getFilename()!=null){
+		                            	String[] files = result.getFilename().split(",");
+		                            	for(int i=0;i<files.length;i++){
+		                            %>
+	                                <tr>
+	                                    <td><%=(i+1)%></td>
+	                                    <td><%=files[i] %></td>
+	                                    <td><%=result.getResult() %></td>
+	                                    <td><button class="details">Details</button></td>
+	                                    <td><button class="details2">Details2</button></td>
+	                                    <td><button class="details3">Details3</button></td>
+	                                    <td><button class="details4">Details4</button></td>
+	                                </tr>
+	                                <%
+		                            	}
+	                            	}
+	                                %>
+	                            </tbody>
+	                        </table>
+	                    </div>
+	                    <figure class="highcharts-figure">
+						    <div id="container2"></div>
+						</figure>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	
+	    <script src="https://cdn.jsdelivr.net/npm/highcharts"></script>
+<script>
+    Highcharts.chart('container2', {
+        chart: {
+            type: 'bar',
+            backgroundColor: '#2a2e45' // 차트 배경색 설정
+        },
+        title: {
+            text: 'ISMS 인증 항목별 준수 여부',
+            style: {
+                color: '#ffffff' // 제목 글자 색상 설정
+            }
+        },
+        xAxis: {
+            categories: ['1. 관리체계 수립 및 운영', '2. 보호대책 요구사항', '3. 개인정보 처리단계별 요구사항'],
+            labels: {
+                style: {
+                    color: '#ffffff' // x축 레이블 글자 색상 설정
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '항목별 준수 개수',
+                style: {
+                    color: '#ffffff' // y축 제목 글자 색상 설정
+                }
+            },
+            labels: {
+                style: {
+                    color: '#ffffff' // y축 레이블 글자 색상 설정
+                }
+            }
+        },
+        legend: {
+            reversed: true,
+            itemStyle: {
+                color: '#ffffff' // 범례 항목 글자 색상 설정
+            }
+        },
+        plotOptions: {
+            series: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        color: '#ffffff' // 데이터 라벨 글자 색상 설정
+                    }
+                }
+            }
+        },
+        series: [{
+            name: '미준수 항목',
+            data: [2, 3, 2]
+        }, {
+            name: '준수 항목',
+            data: [1, 1, 4]
+        }]
+    });
+</script>
+
+	    <script>
+	        $(document).ready(function () {
+	
+	            $('#main_menu > li > a').click(function () {
+	                $(this).next($('.snd_menu')).slideToggle('fast');
+	            })
+	            $('.snd_menu > li > a').click(function (e) {
+	                e.stopPropagation();
+	                $(this).next($('.trd_menu')).slideToggle('fast');
+	            })
+	
+	            // 버튼 클릭 시 색 변경
+	            $('li > a').focus(function () {
+	                $(this).addClass('selec');
+	            })
+	            $("li > a").blur(function () {
+	                $(this).removeClass('selec');
+	            })
+	            $(".details").click(function (){
+	            	window.location.href = 'Downloader?filename='+encodeURIComponent("인증심사_결과.pdf");
+	            });
+	            $(".details2").click(function (){
+	            	window.location.href = 'Downloader?filename='+encodeURIComponent("개인정보보호_교육계획_양식.pdf");
+	            });
+	            $(".details3").click(function (){
+	            	window.location.href = 'Downloader?filename='+encodeURIComponent("개인정보처리_위탁계약서_양식.pdf");
+	            });
+	            $(".details4").click(function (){
+	            	window.location.href = 'Downloader?filename='+encodeURIComponent("내부관리계획_양식.pdf");
+	            });
+	        });
+	    </script>
+	    <script>
+
+        function addURLParamsToForm() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const form = document.querySelector("form[method='post']");
+
+            urlParams.forEach((value, key) => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            });
+        }
+
+        window.onload = addURLParamsToForm;
+	    </script>
+	</body>
+</html>
